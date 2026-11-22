@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RGB to HEX Converter | ColorPicker</title><meta name="description" content="Convert red, green and blue values (0-255) into a HEX color code you can use in CSS.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml"><style>*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f7f5f2;color:#222;line-height:1.6}
+a{color:#6c4cf1}header{background:#22223b;color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.logo{color:#fff;font-weight:800;font-size:20px;text-decoration:none}nav a{color:#e8e6ff;margin:0 8px;text-decoration:none;font-size:14px}
+.hero{padding:34px 20px 10px;text-align:center}.hero h1{margin:0 0 8px;font-size:clamp(28px,4.5vw,44px);color:#22223b}.hero p{color:#555;max-width:700px;margin:0 auto}
+.wrap{max-width:1080px;margin:0 auto;padding:16px 20px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.card{background:#fff;border:1px solid #e5e0da;border-radius:14px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.toolcard{background:#fff;border:1px solid #e5e0da;border-radius:14px;padding:16px;text-decoration:none;color:#222;display:block}
+.toolcard:hover{border-color:#6c4cf1}.toolcard h3{margin:0 0 6px;color:#22223b}.toolcard p{margin:0;font-size:14px;color:#555}
+.acard{background:#fff;border:1px solid #e5e0da;border-radius:14px;overflow:hidden;text-decoration:none;color:#222;display:block}
+.acard img{width:100%;height:150px;object-fit:cover;display:block}.acard span{display:block;padding:12px 14px;font-weight:600;font-size:15px}
+input,select{padding:10px;border-radius:8px;border:1px solid #ccc;font-size:15px;margin:6px 4px 6px 0}
+input[type=color]{width:80px;height:48px;padding:2px;vertical-align:middle}
+button{background:#6c4cf1;color:#fff;border:0;padding:10px 18px;border-radius:8px;font-size:15px;cursor:pointer;margin:4px 4px 4px 0}
+button.ghost{background:#fff;color:#6c4cf1;border:1px solid #6c4cf1}
+.swatches{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.sw{flex:1;min-width:90px;border-radius:10px;padding:14px 8px;color:#fff;text-align:center;font-size:13px;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.4)}
+.bigprev{height:120px;border-radius:12px;margin:10px 0;border:1px solid #ddd}
+.vals{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.val{background:#f7f5f2;border-radius:10px;padding:10px}
+.val b{display:block;font-size:13px;color:#666}.val code{font-size:17px}
+main.article{max-width:760px;margin:0 auto;padding:20px}.article img.hero{width:100%;height:auto;border-radius:14px}
+.lede{font-size:18px;color:#444}footer{padding:26px 20px;text-align:center;color:#666;font-size:13px;border-top:1px solid #e5e0da;margin-top:30px}
+footer a{margin:0 6px}.note{background:#fff8e1;border:1px solid #f0d48a;border-radius:10px;padding:12px;font-size:14px}
+h2{color:#22223b;margin-top:28px}
+</style></head>
+<body><header><a class="logo" href="../index.html">ColorPicker</a><nav><a href="../index.html">Home</a><a href="../index.html#tools">Tools</a><a href="../index.html#articles">Guides</a><a href="../about.html">About</a></nav></header>
+<main class="wrap"><p><a href="../index.html">Home</a> / Tools</p><h1>RGB to HEX Converter</h1><p>Convert red, green and blue values (0-255) into a HEX color code you can use in CSS.</p>
+<div class="card"><script>
+function hexToRgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');const n=parseInt(h,16);return{r:(n>>16)&255,g:(n>>8)&255,b:n&255}}
+function rgbToHex(r,g,b){return '#'+[r,g,b].map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('').toUpperCase()}
+function rgbToHsl(r,g,b){r/=255;g/=255;b/=255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b);let h=0,s=0,l=(mx+mn)/2;if(mx!==mn){const d=mx-mn;s=l>0.5?d/(2-mx-mn):d/(mx+mn);if(mx===r)h=(g-b)/d+(g<b?6:0);else if(mx===g)h=(b-r)/d+2;else h=(r-g)/d+4;h*=60}return{h:Math.round(h),s:Math.round(s*100),l:Math.round(l*100)}}
+function hslToRgb(h,s,l){h=((h%360)+360)%360;s/=100;l/=100;const c=(1-Math.abs(2*l-1))*s,x=c*(1-Math.abs((h/60)%2-1)),m=l-c/2;let r=0,g=0,b=0;if(h<60){r=c;g=x}else if(h<120){r=x;g=c}else if(h<180){g=c;b=x}else if(h<240){g=x;b=c}else if(h<300){r=x;b=c}else{r=c;b=x}return{r:Math.round((r+m)*255),g:Math.round((g+m)*255),b:Math.round((b+m)*255)}}
+function shiftHue(hex,deg){const c=hexToRgb(hex),hsl=rgbToHsl(c.r,c.g,c.b);const rgb=hslToRgb(hsl.h+deg,hsl.s,hsl.l);return rgbToHex(rgb.r,rgb.g,rgb.b)}
+function copyText(t,btn){navigator.clipboard.writeText(t).then(()=>{const o=btn.textContent;btn.textContent='Copied!';setTimeout(()=>btn.textContent=o,1200)})}
+function swatch(hex,label){const c=hexToRgb(hex);const lum=0.2126*c.r+0.7152*c.g+0.0722*c.b;const tc=lum>140?'#111':'#fff';return '<div class="sw" style="background:'+hex+';color:'+tc+';text-shadow:none">'+label+'<br>'+hex+'</div>'}
+</script><label>R <input id="rIn" type="number" min="0" max="255" value="108" style="width:90px"></label>
+<label>G <input id="gIn" type="number" min="0" max="255" value="76" style="width:90px"></label>
+<label>B <input id="bIn" type="number" min="0" max="255" value="241" style="width:90px"></label> <button onclick="conv()">Convert</button>
+<p id="out"></p><p id="prev" class="bigprev"></p>
+<script>function conv(){const r=+document.getElementById('rIn').value,g=+document.getElementById('gIn').value,b=+document.getElementById('bIn').value;if([r,g,b].some(v=>isNaN(v)||v<0||v>255)){document.getElementById('out').textContent='Each value must be a whole number from 0 to 255.';return}const h=rgbToHex(r,g,b);document.getElementById('out').innerHTML='HEX: <b>'+h+'</b>';document.getElementById('prev').style.background=h}</script></div>
+<p class="note">This tool runs entirely in your browser. Nothing you enter is sent to a server.</p>
+<h2>All tools</h2><div class="grid"><a class="toolcard" href="hex-to-rgb.html"><h3>HEX to RGB Converter</h3><p>Convert a HEX color code into its red, green and blue values, instantly and in your browser.</p></a><a class="toolcard" href="rgb-to-hex.html"><h3>RGB to HEX Converter</h3><p>Convert red, green and blue values (0-255) into a HEX color code you can use in CSS.</p></a><a class="toolcard" href="palette-generator.html"><h3>Palette Generator</h3><p>Pick a base color and generate complementary, analogous, triadic and monochromatic palettes.</p></a><a class="toolcard" href="contrast-checker.html"><h3>Contrast Checker</h3><p>Check the WCAG contrast ratio between a text color and a background color, with AA and AAA verdicts.</p></a></div>
+<h2>Guides</h2><div class="grid"><a class="acard" href="../guides/how-to-pick-colors-for-website.html"><img src="../images/how-to-pick-colors-for-website.jpg" alt="How to Pick Colors for a Website" loading="lazy"><span>How to Pick Colors for a Website</span></a><a class="acard" href="../guides/hex-vs-rgb-vs-hsl-explained.html"><img src="../images/hex-vs-rgb-vs-hsl-explained.jpg" alt="HEX vs RGB vs HSL Explained" loading="lazy"><span>HEX vs RGB vs HSL Explained</span></a><a class="acard" href="../guides/building-color-palette-from-scratch.html"><img src="../images/building-color-palette-from-scratch.jpg" alt="Building a Color Palette from Scratch" loading="lazy"><span>Building a Color Palette from Scratch</span></a><a class="acard" href="../guides/color-contrast-accessibility-guide.html"><img src="../images/color-contrast-accessibility-guide.jpg" alt="Color Contrast and Accessibility Guide" loading="lazy"><span>Color Contrast and Accessibility Guide</span></a><a class="acard" href="../guides/color-psychology-in-design.html"><img src="../images/color-psychology-in-design.jpg" alt="Color Psychology in Design" loading="lazy"><span>Color Psychology in Design</span></a><a class="acard" href="../guides/choosing-brand-colors.html"><img src="../images/choosing-brand-colors.jpg" alt="Choosing Brand Colors" loading="lazy"><span>Choosing Brand Colors</span></a></div>
+</main><footer><p><a href="../about.html">About</a> | <a href="../contact.html">Contact</a> | <a href="../privacy.html">Privacy</a> | <a href="../disclaimer.html">Disclaimer</a></p><p>ColorPicker — free tools that run in your browser.</p></footer></body></html>
